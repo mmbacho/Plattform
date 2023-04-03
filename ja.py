@@ -1,1 +1,0 @@
-print("jag gillar män:)åhhh")
