@@ -14,3 +14,8 @@ player = {
     posX: 10,
     posY: 10,
 }
+
+function drawRect(rect){
+    context.fillStyle = rect.color
+    context.fillRect(rect.posX, rect.posY, rect.width, rect.height)
+}
