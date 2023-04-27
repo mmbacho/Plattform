@@ -2,6 +2,9 @@ let canvas = document.getElementById("canvas")
 canvas.width = window.innerWidth
 canvas.height = window.innerHeight
 
+yCenterCoord = canvas.height / 2
+xCenterCoord = canvas.width / 2
+
 let context = canvas.getContext("2d")
 
 context.fillStyle = "black"
@@ -11,10 +14,25 @@ player = {
     color: "red",
     width: 30,
     height: 30,
-    posX: 10,
-    posY: 10,
-    speedX: 10,
-    speedY: 10,
+    posX: xCenterCoord,
+    posY: yCenterCoord,
+    speedX: 0,
+    speedY: 0,
+    gravity: 0.05,
+    gravitySpeed: 0,
+    jumpSpeed: -2,
+}
+
+platform = {
+    color: "blue",
+    width: 50,
+    height: 30,
+    posX: xCenterCoord,
+    posY: yCenterCoord + 200,
+    speedX: 0,
+    speedY: 0,
+    gravity: 0,
+    gravitySpeed: 0,
 }
 
 function drawRect(rect){
@@ -27,47 +45,68 @@ function clearScreen(){
     context.fillRect(0, 0, canvas.width, canvas.height)
 }
 
-function moveObject(object){
-    object.posX += object.speedX
-    object.posY += object.speedY
+function detectBottom(entity){
+    let maxYValue = canvas.height - entity.height
+    let platformYValue = platform.posY - entity.height
 
-    if(object.posX > canvas.width || object.posX < 0){
-        object.speedX = -object.speedX
+    if (entity.posY > platformYValue) {
+        entity.posY = platformYValue
+        entity.gravitySpeed = 0
+        entity.speedY = 0
     }
 
-    if(object.posY > canvas.height || object.posY < 0){
-        object.speedY = -object.speedY
+    if (entity.posY > maxYValue) {
+      entity.posY = maxYValue
+      entity.gravitySpeed = 0
+      entity.speedY = 0
     }
+    
+
+    
+}
+
+function updatePos(entity){
+    entity.gravitySpeed += entity.gravity
+    entity.posX += entity.speedX
+    entity.posY += entity.speedY + entity.gravitySpeed
+
+    detectBottom(entity)
 }   
 
-function jump(){
-    player.posY = oldValueY
-    while(true){
-        player.speedY = 10
-        if(player.posY > oldValueY + 50){
-            player.speedY = 0
-            break
-        }
-    }
+function jump(entity){
+    entity.speedY = entity.jumpSpeed
+}
 
+function walkRight(entity){
+    entity.speedX = -2
+}
+function walkLeft(entity){
+    entity.speedX = 2
 }
 
 document.onkeydown = function (e) {
     const key = e.key;
     switch (key) {
-      case "":
-        console.log("");
+      case "w":
+        jump(player)
+        
         break;
-      case "":
-        console.log("");
+      case "a":
+        walkLeft(platform)
+        break;
+      case "d":
+        walkRight(platform)
         break;
     }
   };
 
 function update(){
     clearScreen()
-    moveObject(player)
+   updatePos(player)
     drawRect(player)
+
+    drawRect(platform)
+    updatePos(platform)
 }
 
 setInterval(update, 10)
