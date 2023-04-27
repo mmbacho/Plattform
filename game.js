@@ -7,7 +7,11 @@ xCenterCoord = canvas.width / 2
 
 let context = canvas.getContext("2d")
 
-context.fillStyle = "black"
+const img = new Image()
+img.src = "background.png"
+img.onload = () => {
+  context.drawImage(img, 0, 0)
+}
 context.fillRect(0, 0, canvas.width, canvas.height)
 
 player = {
@@ -41,7 +45,7 @@ function drawRect(rect){
 }
 
 function clearScreen(){
-    context.fillStyle = "black"
+    context.drawImage(img, 0, 0)
     context.fillRect(0, 0, canvas.width, canvas.height)
 }
 

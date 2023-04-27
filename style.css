@@ -1,4 +1,10 @@
 body{
     margin:0;
     overflow: hidden;
+    
+}
+#game{
+    border-style: solid;
+    border-color: aqua ;
+    background-image: url("background.png");
 }
