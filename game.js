@@ -1,3 +1,36 @@
+//Klasser
+class Player{
+    constructor(tag, color, width, height, posX, posY, gravity, jumpSpeed){
+        this.tag = "player"
+        this.color = color
+        this.width = width
+        this.height = height
+        this.posX = posX
+        this.posY = posY
+        this.gravity = gravity
+        this.gravitySpeed = 0
+        this.jumpSpeed = jumpSpeed
+        this.speedX = 0
+        this.speedY = 0
+    }
+}
+
+
+class Platform{
+    constructor(tag, color, width, height, posX, posY){
+        this.tag = "platform"
+        this.color = color
+        this.width = width
+        this.height = height
+        this.posX = posX
+        this.posY = posY
+        this.speedX = 0
+        this.speedY = 0
+        this.gravity = 0
+        this.gravitySpeed = 0
+    }
+}
+
 let canvas = document.getElementById("canvas")
 canvas.width = window.innerWidth
 canvas.height = window.innerHeight
@@ -10,34 +43,17 @@ let context = canvas.getContext("2d")
 const img = new Image()
 img.src = "background.png"
 img.onload = () => {
-  context.drawImage(img, 0, 0)
+  context.drawImage(img, 250, 100)
 }
 context.fillRect(0, 0, canvas.width, canvas.height)
 
-player = {
-    color: "red",
-    width: 30,
-    height: 30,
-    posX: xCenterCoord,
-    posY: yCenterCoord,
-    speedX: 0,
-    speedY: 0,
-    gravity: 0.05,
-    gravitySpeed: 0,
-    jumpSpeed: -2,
-}
 
-platform = {
-    color: "blue",
-    width: 50,
-    height: 30,
-    posX: xCenterCoord,
-    posY: yCenterCoord + 200,
-    speedX: 0,
-    speedY: 0,
-    gravity: 0,
-    gravitySpeed: 0,
-}
+
+player = new Player("player", "red", 30, 30, xCenterCoord, yCenterCoord, 0.05, -2)
+
+platform = new Platform("platform", "blue", 100, 30, xCenterCoord, yCenterCoord + 200)
+
+
 
 function drawRect(rect){
     context.fillStyle = rect.color
@@ -45,8 +61,8 @@ function drawRect(rect){
 }
 
 function clearScreen(){
-    context.drawImage(img, 0, 0)
-    context.fillRect(0, 0, canvas.width, canvas.height)
+    context.drawImage(img, 250, 100)
+    //context.fillRect(0, 0, canvas.width, canvas.height)
 }
 
 function detectBottom(entity){
@@ -74,7 +90,9 @@ function updatePos(entity){
     entity.posX += entity.speedX
     entity.posY += entity.speedY + entity.gravitySpeed
 
-    detectBottom(entity)
+    
+
+    //detectBottom(entity)
 }   
 
 function jump(entity){
