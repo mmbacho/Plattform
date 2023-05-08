@@ -47,11 +47,23 @@ img.onload = () => {
 }
 context.fillRect(0, 0, canvas.width, canvas.height)
 
+function startGame(){
+    
+}
+
+function intGame(){
+    player = new Player("player", "red", 30, 30, xCenterCoord, yCenterCoord, 0.05, -2)
+    platform1 = new Platform("platform", "blue", 100, 30, xCenterCoord, yCenterCoord + 200)
+    platform2 = new Platform("platform", "blue", 100, 30, xCenterCoord, yCenterCoord + 200)
+    platform3 = new Platform("platform", "blue", 100, 30, xCenterCoord, yCenterCoord + 200)
 
 
-player = new Player("player", "red", 30, 30, xCenterCoord, yCenterCoord, 0.05, -2)
+    const platforms = [platform1, platform2, platform3]
 
-platform = new Platform("platform", "blue", 100, 30, xCenterCoord, yCenterCoord + 200)
+    startGame()
+}
+
+
 
 
 
