@@ -51,11 +51,11 @@ function startGame(){
     
 }
 
+player = new Player("player", "red", 30, 30, xCenterCoord, yCenterCoord, 0.05, -3)
+platform1 = new Platform("platform", "blue", 100, 30, xCenterCoord, yCenterCoord + 200)
+platform2 = new Platform("platform", "blue", 100, 30, xCenterCoord, yCenterCoord + 200)
+platform3 = new Platform("platform", "blue", 100, 30, xCenterCoord, yCenterCoord + 200)
 function intGame(){
-    player = new Player("player", "red", 30, 30, xCenterCoord, yCenterCoord, 0.05, -2)
-    platform1 = new Platform("platform", "blue", 100, 30, xCenterCoord, yCenterCoord + 200)
-    platform2 = new Platform("platform", "blue", 100, 30, xCenterCoord, yCenterCoord + 200)
-    platform3 = new Platform("platform", "blue", 100, 30, xCenterCoord, yCenterCoord + 200)
 
 
     const platforms = [platform1, platform2, platform3]
@@ -108,6 +108,7 @@ function updatePos(entity){
 }   
 
 function jump(entity){
+    entity.gravitySpeed = 0
     entity.speedY = entity.jumpSpeed
 }
 
@@ -126,10 +127,10 @@ document.onkeydown = function (e) {
         
         break;
       case "a":
-        walkLeft(platform)
+
         break;
       case "d":
-        walkRight(platform)
+
         break;
     }
   };
@@ -139,8 +140,8 @@ function update(){
    updatePos(player)
     drawRect(player)
 
-    drawRect(platform)
-    updatePos(platform)
+    drawRect(platform1)
+    updatePos(platform1)
 }
 
 setInterval(update, 10)
