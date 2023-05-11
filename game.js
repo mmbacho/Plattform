@@ -24,7 +24,7 @@ class Platform{
         this.height = height
         this.posX = posX
         this.posY = posY
-        this.speedX = 0
+        this.speedX = -0.5
         this.speedY = 0
         this.gravity = 0
         this.gravitySpeed = 0
@@ -51,21 +51,31 @@ function startGame(){
     
 }
 
-player = new Player("player", "red", 30, 30, xCenterCoord, yCenterCoord, 0.05, -3)
-platform1 = new Platform("platform", "blue", 100, 30, xCenterCoord, yCenterCoord + 200)
-platform2 = new Platform("platform", "blue", 100, 30, xCenterCoord, yCenterCoord + 200)
-platform3 = new Platform("platform", "blue", 100, 30, xCenterCoord, yCenterCoord + 200)
+const gravity = 0.05
+let isOnGround = false
+
+let player = new Player("player", "red", 30, 30, xCenterCoord, yCenterCoord - 100, gravity, -3)
+let platform1 = new Platform("platform", "blue", 100, 30, xCenterCoord, yCenterCoord)
+let platform2 = new Platform("platform", "blue", 100, 30, xCenterCoord + 200, yCenterCoord)
+let platform3 = new Platform("platform", "blue", 100, 30, xCenterCoord + 400, yCenterCoord)
+
+const platforms = [platform1, platform2, platform3]
+
 function intGame(){
-
-
-    const platforms = [platform1, platform2, platform3]
 
     startGame()
 }
 
 
 
-
+function drawPlatforms(){
+    for (let i = 0; i < platforms.length; i++) {
+        let plat = platforms[i];
+        
+        context.fillStyle = plat.color
+        context.fillRect(plat.posX, plat.posY, plat.width, plat.height)
+    }
+}
 
 function drawRect(rect){
     context.fillStyle = rect.color
@@ -77,34 +87,79 @@ function clearScreen(){
     //context.fillRect(0, 0, canvas.width, canvas.height)
 }
 
-function detectBottom(entity){
-    let maxYValue = canvas.height - entity.height
-    let platformYValue = platform.posY - entity.height
+// function collisionDetection(player, platform1){
+//     // for (let plat = 0; plat < platforms; plat++) {
+//         platformLeftCorner = platform1.posX
+//         platformRightCorner = platform1.posX + platform1.width
+//         platformYValue = platform1.posY
 
-    if (entity.posY > platformYValue) {
-        entity.posY = platformYValue
-        entity.gravitySpeed = 0
-        entity.speedY = 0
-    }
+//         playerLeftCorner = player.posX
+//         playerRightCorner = player.posX + player.width
+//         playerYValue = player.posY + player.height
+        
+//         if(playerLeftCorner > platformLeftCorner && playerRightCorner < platformRightCorner && playerYValue <= platformYValue){
+//             player.speedY = 0
+//             player.gravitySpeed = 0
+//             console.log("HIT")
+//         }
+    // }
 
-    if (entity.posY > maxYValue) {
-      entity.posY = maxYValue
-      entity.gravitySpeed = 0
-      entity.speedY = 0
-    }
+function collisionDetection() {
+
+        for (let r = 0; r < platforms.length; r++) {
+            
+            const b = platforms[r];
+            if (player.posX > b.posX && player.posX < b.posX + b.width && player.posY + player.height > b.posY && player.posY < b.posY + b.height) {
+                player.gravitySpeed = 0
+                player.speedY = 0
+                player.posY = b.posY - b.height
+            }
+        }
+
+        
+
+        // else if (player.posY + player.height >= b.posY && player.posY + player.height < b.posY+10 && player.posX > b.posY && player.posX + player.width < b.posY + b.width){
+        //     player.posY = 500
+        //     player.gravitySpeed = 0
+        //     player.speedY = 0
+        // }
+ }
+
+
+
+// function detectBottom(entity){
+//     let maxYValue = canvas.height - entity.height
+//     let platformYValue = platform.posY - entity.height
+
+//     if (entity.posY > platformYValue) {
+//         entity.posY = platformYValue
+//         entity.gravitySpeed = 0
+//         entity.speedY = 0
+//     }
+
+//     if (entity.posY > maxYValue) {
+//       entity.posY = maxYValue
+//       entity.gravitySpeed = 0
+//       entity.speedY = 0
+//     }
     
 
     
-}
+// }
 
 function updatePos(entity){
     entity.gravitySpeed += entity.gravity
     entity.posX += entity.speedX
     entity.posY += entity.speedY + entity.gravitySpeed
 
-    
+}
 
-    //detectBottom(entity)
+function updatePlatformPos(){
+    for (let c = 0; c < platforms.length; c++) {
+        const plat = platforms[c];
+        plat.posX += plat.speedX
+    }
+
 }   
 
 function jump(entity){
@@ -126,22 +181,17 @@ document.onkeydown = function (e) {
         jump(player)
         
         break;
-      case "a":
-
-        break;
-      case "d":
-
-        break;
     }
   };
 
 function update(){
     clearScreen()
-   updatePos(player)
+    updatePos(player)
     drawRect(player)
 
-    drawRect(platform1)
-    updatePos(platform1)
+    drawPlatforms()
+    updatePlatformPos()
+    collisionDetection(player)
 }
 
 setInterval(update, 10)
