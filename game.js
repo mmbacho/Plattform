@@ -53,13 +53,20 @@ function startGame(){
 
 const gravity = 0.05
 let isOnGround = false
+const platformSpawnX = canvas.width - 300
+const endOfScreen = 300
+const groundLevel = canvas.height-100
+let numOfJumps = 0
 
 let player = new Player("player", "red", 30, 30, xCenterCoord, yCenterCoord - 100, gravity, -3)
 let platform1 = new Platform("platform", "blue", 100, 30, xCenterCoord, yCenterCoord)
 let platform2 = new Platform("platform", "blue", 100, 30, xCenterCoord + 200, yCenterCoord)
 let platform3 = new Platform("platform", "blue", 100, 30, xCenterCoord + 400, yCenterCoord)
+let platform4 = new Platform("platform", "blue", 100, 30, xCenterCoord + 600, yCenterCoord)
+let platform5 = new Platform("platform", "blue", 100, 30, xCenterCoord + 800, yCenterCoord)
 
-const platforms = [platform1, platform2, platform3]
+
+const platforms = [platform1, platform2, platform3, platform4, platform5]
 
 function intGame(){
 
@@ -104,6 +111,17 @@ function clearScreen(){
 //         }
     // }
 
+function gameOver(){
+    player.gravity = 0
+    player.gravitySpeed = 0
+    numOfJumps = 2
+    for (let k = 0; k < platforms.length; k++) {
+        const plat = platforms[k];
+        plat.speedX = 0
+    }
+
+}
+
 function collisionDetection() {
 
         for (let r = 0; r < platforms.length; r++) {
@@ -112,8 +130,13 @@ function collisionDetection() {
             if (player.posX > b.posX && player.posX < b.posX + b.width && player.posY + player.height > b.posY && player.posY < b.posY + b.height) {
                 player.gravitySpeed = 0
                 player.speedY = 0
-                player.posY = b.posY - b.height
+                player.posY = b.posY - player.height
+                numOfJumps = 0
             }
+        }
+
+        if(player.posY + player.height > groundLevel){
+            gameOver()
         }
 
         
@@ -147,6 +170,12 @@ function collisionDetection() {
     
 // }
 
+function generateNewPos(plat){
+    let heightDiviation = 150 * Math.random()
+    plat.posX = platformSpawnX
+    plat.posY = 200 + heightDiviation
+}
+
 function updatePos(entity){
     entity.gravitySpeed += entity.gravity
     entity.posX += entity.speedX
@@ -158,13 +187,20 @@ function updatePlatformPos(){
     for (let c = 0; c < platforms.length; c++) {
         const plat = platforms[c];
         plat.posX += plat.speedX
+
+        if(plat.posX < endOfScreen){
+            generateNewPos(plat)
+        }
     }
 
 }   
 
 function jump(entity){
-    entity.gravitySpeed = 0
-    entity.speedY = entity.jumpSpeed
+    if(numOfJumps < 2){
+        entity.gravitySpeed = 0
+        entity.speedY = entity.jumpSpeed
+        numOfJumps += 1
+    }
 }
 
 function walkRight(entity){
