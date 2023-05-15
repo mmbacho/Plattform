@@ -1,6 +1,6 @@
 //Klasser
 class Player{
-    constructor(tag, color, width, height, posX, posY, gravity, jumpSpeed){
+    constructor(tag, color, width, height, posX, posY, gravity, jumpSpeed, numOfJumps, jumpsAllowed){
         this.tag = "player"
         this.color = color
         this.width = width
@@ -10,8 +10,9 @@ class Player{
         this.gravity = gravity
         this.gravitySpeed = 0
         this.jumpSpeed = jumpSpeed
-        this.speedX = 0
         this.speedY = 0
+        this.numOfJumps = numOfJumps
+        this.jumpsAllowed = jumpsAllowed
     }
 }
 
@@ -58,12 +59,12 @@ const endOfScreen = 300
 const groundLevel = canvas.height-100
 let numOfJumps = 0
 
-let player = new Player("player", "red", 30, 30, xCenterCoord, yCenterCoord - 100, gravity, -3)
+let player = new Player("player", "red", 30, 30, xCenterCoord, yCenterCoord - 100, gravity, -3, 0, 2)
 let platform1 = new Platform("platform", "blue", 100, 30, xCenterCoord, yCenterCoord)
-let platform2 = new Platform("platform", "blue", 100, 30, xCenterCoord + 200, yCenterCoord)
-let platform3 = new Platform("platform", "blue", 100, 30, xCenterCoord + 400, yCenterCoord)
-let platform4 = new Platform("platform", "blue", 100, 30, xCenterCoord + 600, yCenterCoord)
-let platform5 = new Platform("platform", "blue", 100, 30, xCenterCoord + 800, yCenterCoord)
+let platform2 = new Platform("platform", "blue", 100, 30, xCenterCoord + 150, yCenterCoord)
+let platform3 = new Platform("platform", "blue", 100, 30, xCenterCoord + 300, yCenterCoord - 100)
+let platform4 = new Platform("platform", "blue", 100, 30, xCenterCoord + 450, yCenterCoord)
+let platform5 = new Platform("platform", "blue", 100, 30, xCenterCoord + 600, yCenterCoord)
 
 
 const platforms = [platform1, platform2, platform3, platform4, platform5]
@@ -114,7 +115,7 @@ function clearScreen(){
 function gameOver(){
     player.gravity = 0
     player.gravitySpeed = 0
-    numOfJumps = 2
+    player.numOfJumps = 2
     for (let k = 0; k < platforms.length; k++) {
         const plat = platforms[k];
         plat.speedX = 0
@@ -127,12 +128,16 @@ function collisionDetection() {
         for (let r = 0; r < platforms.length; r++) {
             
             const b = platforms[r];
-            if (player.posX > b.posX && player.posX < b.posX + b.width && player.posY + player.height > b.posY && player.posY < b.posY + b.height) {
+            if(player.posX > b.posX - player.width && player.posX < b.posX + b.width && player.posY + player.height > b.posY + 5 && player.posY < b.posY + b.height){
+                gameOver()
+            }
+            else if (player.posX > b.posX - player.width && player.posX < b.posX + b.width && player.posY + player.height > b.posY && player.posY < b.posY + b.height) {
                 player.gravitySpeed = 0
                 player.speedY = 0
                 player.posY = b.posY - player.height
-                numOfJumps = 0
+                player.numOfJumps = 0
             }
+
         }
 
         if(player.posY + player.height > groundLevel){
@@ -178,7 +183,6 @@ function generateNewPos(plat){
 
 function updatePos(entity){
     entity.gravitySpeed += entity.gravity
-    entity.posX += entity.speedX
     entity.posY += entity.speedY + entity.gravitySpeed
 
 }
@@ -195,26 +199,20 @@ function updatePlatformPos(){
 
 }   
 
-function jump(entity){
-    if(numOfJumps < 2){
-        entity.gravitySpeed = 0
-        entity.speedY = entity.jumpSpeed
-        numOfJumps += 1
+function jump(){
+    if(player.numOfJumps < 2){
+        player.gravitySpeed = 0
+        player.speedY = player.jumpSpeed
+        player.numOfJumps += 1
     }
 }
 
-function walkRight(entity){
-    entity.speedX = -2
-}
-function walkLeft(entity){
-    entity.speedX = 2
-}
 
 document.onkeydown = function (e) {
     const key = e.key;
     switch (key) {
       case "w":
-        jump(player)
+        jump()
         
         break;
     }
