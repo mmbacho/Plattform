@@ -85,10 +85,17 @@ function drawPlatforms(){
     }
 }
 
-function drawRect(rect){
-    context.fillStyle = rect.color
-    context.fillRect(rect.posX, rect.posY, rect.width, rect.height)
-}
+
+    function drawRect(rect){
+        var image = document.querySelector("img");
+        var canvas = document.querySelector("canvas");
+    
+        var ctx = canvas.getContext("2d");
+    
+        ctx.drawImage(
+            image, player.posX, player.posY, 50, 50
+        )
+    }
 
 function clearScreen(){
     context.drawImage(img, 250, 100)
