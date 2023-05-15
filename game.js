@@ -55,22 +55,21 @@ function startGame(){
 const gravity = 0.05
 let isOnGround = false
 const platformSpawnX = canvas.width - 300
-const endOfScreen = 300
+const endOfScreen = 200
 const groundLevel = canvas.height-100
-let numOfJumps = 0
 
-let player = new Player("player", "red", 30, 30, xCenterCoord, yCenterCoord - 100, gravity, -3, 0, 2)
+let player = new Player("player", "red", 50, 50, xCenterCoord, yCenterCoord - 100, gravity, -3, 0, 2)
 let platform1 = new Platform("platform", "blue", 100, 30, xCenterCoord, yCenterCoord)
-let platform2 = new Platform("platform", "blue", 100, 30, xCenterCoord + 150, yCenterCoord)
-let platform3 = new Platform("platform", "blue", 100, 30, xCenterCoord + 300, yCenterCoord - 100)
-let platform4 = new Platform("platform", "blue", 100, 30, xCenterCoord + 450, yCenterCoord)
-let platform5 = new Platform("platform", "blue", 100, 30, xCenterCoord + 600, yCenterCoord)
+let platform2 = new Platform("platform", "blue", 100, 30, xCenterCoord + 200, yCenterCoord)
+let platform3 = new Platform("platform", "blue", 100, 30, xCenterCoord + 400, yCenterCoord - 100)
+let platform4 = new Platform("platform", "blue", 100, 30, xCenterCoord + 600, yCenterCoord)
+let platform5 = new Platform("platform", "blue", 100, 30, xCenterCoord + 800, yCenterCoord)
+let platform6 = new Platform("platform", "blue", 100, 30, xCenterCoord + 1000, yCenterCoord)
 
 
-const platforms = [platform1, platform2, platform3, platform4, platform5]
+const platforms = [platform1, platform2, platform3, platform4, platform5, platform6]
 
 function intGame(){
-
     startGame()
 }
 
@@ -87,7 +86,8 @@ function drawPlatforms(){
 
 
     function drawRect(rect){
-        var image = document.querySelector("img");
+        var image = new Image()
+        image.src = "Owl.png"
         var canvas = document.querySelector("canvas");
     
         var ctx = canvas.getContext("2d");
