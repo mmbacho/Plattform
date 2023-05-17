@@ -31,10 +31,12 @@ class Platform{
         this.gravitySpeed = 0
     }
 }
+// canvas.width = window.innerWidth
+// canvas.height = window.innerHeight
 
 let canvas = document.getElementById("canvas")
-canvas.width = window.innerWidth
-canvas.height = window.innerHeight
+canvas.width = 1150
+canvas.height = 600
 
 yCenterCoord = canvas.height / 2
 xCenterCoord = canvas.width / 2
@@ -44,9 +46,9 @@ let context = canvas.getContext("2d")
 const img = new Image()
 img.src = "background.png"
 img.onload = () => {
-  context.drawImage(img, 250, 100)
+  context.drawImage(img, 150,100)
 }
-context.fillRect(0, 0, canvas.width, canvas.height)
+context.fillRect(150, 100, canvas.width, canvas.height)
 
 function startGame(){
     
@@ -54,9 +56,11 @@ function startGame(){
 
 const gravity = 0.05
 let isOnGround = false
+let isGameOver = false
 const platformSpawnX = canvas.width - 300
-const endOfScreen = 200
+const endOfScreen = 100
 const groundLevel = canvas.height-100
+let roofLevel = 100
 
 let player = new Player("player", "red", 50, 50, xCenterCoord, yCenterCoord - 100, gravity, -3, 0, 2)
 let platform1 = new Platform("platform", "blue", 100, 30, xCenterCoord, yCenterCoord)
@@ -85,44 +89,29 @@ function drawPlatforms(){
 }
 
 
-    function drawRect(rect){
+    function drawPlayer(){
         var image = new Image()
         image.src = "Owl.png"
         var canvas = document.querySelector("canvas");
     
         var ctx = canvas.getContext("2d");
     
-        ctx.drawImage(
-            image, player.posX, player.posY, 50, 50
-        )
+        ctx.drawImage(image, player.posX, player.posY, 50, 50)
     }
 
 function clearScreen(){
-    context.drawImage(img, 250, 100)
+    context.drawImage(img, 150, 100)
     //context.fillRect(0, 0, canvas.width, canvas.height)
 }
 
-// function collisionDetection(player, platform1){
-//     // for (let plat = 0; plat < platforms; plat++) {
-//         platformLeftCorner = platform1.posX
-//         platformRightCorner = platform1.posX + platform1.width
-//         platformYValue = platform1.posY
-
-//         playerLeftCorner = player.posX
-//         playerRightCorner = player.posX + player.width
-//         playerYValue = player.posY + player.height
-        
-//         if(playerLeftCorner > platformLeftCorner && playerRightCorner < platformRightCorner && playerYValue <= platformYValue){
-//             player.speedY = 0
-//             player.gravitySpeed = 0
-//             console.log("HIT")
-//         }
-    // }
 
 function gameOver(){
     player.gravity = 0
     player.gravitySpeed = 0
-    player.numOfJumps = 2
+    player.speedY = 0
+
+    isGameOver = true
+
     for (let k = 0; k < platforms.length; k++) {
         const plat = platforms[k];
         plat.speedX = 0
@@ -147,40 +136,13 @@ function collisionDetection() {
 
         }
 
-        if(player.posY + player.height > groundLevel){
+        if(player.posY + player.height > groundLevel || player.posY < roofLevel){
             gameOver()
         }
 
         
 
-        // else if (player.posY + player.height >= b.posY && player.posY + player.height < b.posY+10 && player.posX > b.posY && player.posX + player.width < b.posY + b.width){
-        //     player.posY = 500
-        //     player.gravitySpeed = 0
-        //     player.speedY = 0
-        // }
- }
-
-
-
-// function detectBottom(entity){
-//     let maxYValue = canvas.height - entity.height
-//     let platformYValue = platform.posY - entity.height
-
-//     if (entity.posY > platformYValue) {
-//         entity.posY = platformYValue
-//         entity.gravitySpeed = 0
-//         entity.speedY = 0
-//     }
-
-//     if (entity.posY > maxYValue) {
-//       entity.posY = maxYValue
-//       entity.gravitySpeed = 0
-//       entity.speedY = 0
-//     }
-    
-
-    
-// }
+}
 
 function generateNewPos(plat){
     let heightDiviation = 150 * Math.random()
@@ -207,7 +169,7 @@ function updatePlatformPos(){
 }   
 
 function jump(){
-    if(player.numOfJumps < 2){
+    if(player.numOfJumps < 2 && isGameOver === false){
         player.gravitySpeed = 0
         player.speedY = player.jumpSpeed
         player.numOfJumps += 1
@@ -228,7 +190,7 @@ document.onkeydown = function (e) {
 function update(){
     clearScreen()
     updatePos(player)
-    drawRect(player)
+    drawPlayer()
 
     drawPlatforms()
     updatePlatformPos()

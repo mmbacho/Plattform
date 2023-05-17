@@ -1,11 +1,7 @@
 body{
     margin:0;
     overflow: hidden;
-    background: linear-gradient(to top left, black, aqua, black, aqua, black);
+    background: white;
 }
-#game{
-    border-style: solid;
-    border-color: aqua ;
-    background-image: url("background.png");
-}
+
 
