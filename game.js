@@ -1,6 +1,6 @@
 //Klasser
 class Player{
-    constructor(tag, color, width, height, posX, posY, gravity, jumpSpeed, numOfJumps, jumpsAllowed){
+    constructor(tag, color, width, height, posX, posY, gravity, jumpSpeed, numOfJumps, jumpsAllowed, numOfPoints){
         this.tag = "player"
         this.color = color
         this.width = width
@@ -13,6 +13,7 @@ class Player{
         this.speedY = 0
         this.numOfJumps = numOfJumps
         this.jumpsAllowed = jumpsAllowed
+        this.numOfPoints = numOfPoints
     }
 }
 
@@ -35,8 +36,8 @@ class Platform{
 // canvas.height = window.innerHeight
 
 let canvas = document.getElementById("canvas")
-canvas.width = 1150
-canvas.height = 600
+canvas.width = 1000
+canvas.height = 500
 
 yCenterCoord = canvas.height / 2
 xCenterCoord = canvas.width / 2
@@ -46,36 +47,37 @@ let context = canvas.getContext("2d")
 const img = new Image()
 img.src = "background.png"
 img.onload = () => {
-  context.drawImage(img, 150,100)
+    context.drawImage(img, 0,0)
 }
-context.fillRect(150, 100, canvas.width, canvas.height)
+context.fillRect(0, 0, canvas.width, canvas.height)
 
-function startGame(){
-    
-}
+platformDefaultSpawnLevel = yCenterCoord + 100
 
 const gravity = 0.05
 let isOnGround = false
 let isGameOver = false
 const platformSpawnX = canvas.width - 300
-const endOfScreen = 100
+const endOfScreen = -100
 const groundLevel = canvas.height-100
-let roofLevel = 100
+let roofLevel = 0
 
-let player = new Player("player", "red", 50, 50, xCenterCoord, yCenterCoord - 100, gravity, -3, 0, 2)
-let platform1 = new Platform("platform", "blue", 100, 30, xCenterCoord, yCenterCoord)
-let platform2 = new Platform("platform", "blue", 100, 30, xCenterCoord + 200, yCenterCoord)
-let platform3 = new Platform("platform", "blue", 100, 30, xCenterCoord + 400, yCenterCoord - 100)
-let platform4 = new Platform("platform", "blue", 100, 30, xCenterCoord + 600, yCenterCoord)
-let platform5 = new Platform("platform", "blue", 100, 30, xCenterCoord + 800, yCenterCoord)
-let platform6 = new Platform("platform", "blue", 100, 30, xCenterCoord + 1000, yCenterCoord)
+let score = document.getElementById("score")
 
+
+
+
+
+let player = new Player("player", "red", 50, 50, xCenterCoord, yCenterCoord - 100, gravity, -3, 0, 2, 0)
+let platform1 = new Platform("platform", "blue", 100, 30, xCenterCoord, platformDefaultSpawnLevel)
+let platform2 = new Platform("platform", "blue", 100, 30, xCenterCoord + 200, platformDefaultSpawnLevel)
+let platform3 = new Platform("platform", "blue", 100, 30, xCenterCoord + 400, platformDefaultSpawnLevel )
+let platform4 = new Platform("platform", "blue", 100, 30, xCenterCoord + 600, platformDefaultSpawnLevel)
+let platform5 = new Platform("platform", "blue", 100, 30, xCenterCoord + 800, platformDefaultSpawnLevel)
+let platform6 = new Platform("platform", "blue", 100, 30, xCenterCoord + 1000, platformDefaultSpawnLevel)
 
 const platforms = [platform1, platform2, platform3, platform4, platform5, platform6]
 
-function intGame(){
-    startGame()
-}
+
 
 
 
@@ -100,7 +102,7 @@ function drawPlatforms(){
     }
 
 function clearScreen(){
-    context.drawImage(img, 150, 100)
+    context.drawImage(img, 0, 0)
     //context.fillRect(0, 0, canvas.width, canvas.height)
 }
 
@@ -146,8 +148,11 @@ function collisionDetection() {
 
 function generateNewPos(plat){
     let heightDiviation = 150 * Math.random()
-    plat.posX = platformSpawnX
+    plat.posX = canvas.width + 100
     plat.posY = 200 + heightDiviation
+
+    player.numOfPoints += 1
+    score.innerHTML = "Score: " + player.numOfPoints
 }
 
 function updatePos(entity){
@@ -197,4 +202,8 @@ function update(){
     collisionDetection(player)
 }
 
-setInterval(update, 10)
+function startGame(){
+    setInterval(update, 10)
+}
+
+startGame()
