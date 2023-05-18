@@ -19,15 +19,16 @@ background: linear-gradient(90deg, rgba(173,251,80,1) 28%, rgba(252,99,99,1) 81%
     border-width: 10px;
 }
 
-#score{
+p {
     font-size: 60px;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }
 
-#score_element{
+#flexbox_elements{
     display: flex;
     width: 100%;
     align-items: center;
-    justify-content: center;
+    justify-content: space-evenly;
     margin-bottom: -150px;
-}
 
+}

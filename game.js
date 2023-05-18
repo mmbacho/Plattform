@@ -1,6 +1,6 @@
 //Klasser
 class Player{
-    constructor(tag, color, width, height, posX, posY, gravity, jumpSpeed, numOfJumps, jumpsAllowed, numOfPoints){
+    constructor(tag, color, width, height, posX, posY, gravity, jumpSpeed, numOfJumps, jumpsAllowed, image){
         this.tag = "player"
         this.color = color
         this.width = width
@@ -13,7 +13,8 @@ class Player{
         this.speedY = 0
         this.numOfJumps = numOfJumps
         this.jumpsAllowed = jumpsAllowed
-        this.numOfPoints = numOfPoints
+        this.score = 0
+        this.image = image
     }
 }
 
@@ -27,9 +28,6 @@ class Platform{
         this.posX = posX
         this.posY = posY
         this.speedX = -0.5
-        this.speedY = 0
-        this.gravity = 0
-        this.gravitySpeed = 0
     }
 }
 // canvas.width = window.innerWidth
@@ -53,7 +51,6 @@ context.fillRect(0, 0, canvas.width, canvas.height)
 
 platformDefaultSpawnLevel = yCenterCoord + 100
 
-const gravity = 0.05
 let isOnGround = false
 let isGameOver = false
 const platformSpawnX = canvas.width - 300
@@ -61,13 +58,25 @@ const endOfScreen = -100
 const groundLevel = canvas.height-100
 let roofLevel = 0
 
-let score = document.getElementById("score")
+let highscore = 0
+
+let scoreDiv = document.getElementById("score")
+let highscoreDiv = document.getElementById("highscore")
+
+//player var
+const spawnpointX = xCenterCoord
+const spawnpointY = yCenterCoord
+const gravity = 0.05
+
+let chosenCharacter = "Owl.png"
+
+//Platform var
+const platformVelocityX = -0.5
+const spawnpointXDiviation = 200
+const spawnpointYDiviation = 20
 
 
-
-
-
-let player = new Player("player", "red", 50, 50, xCenterCoord, yCenterCoord - 100, gravity, -3, 0, 2, 0)
+let player = new Player("player", "red", 50, 50, xCenterCoord, yCenterCoord - 100, gravity, -3, 0, 2, "Owl.png")
 let platform1 = new Platform("platform", "blue", 100, 30, xCenterCoord, platformDefaultSpawnLevel)
 let platform2 = new Platform("platform", "blue", 100, 30, xCenterCoord + 200, platformDefaultSpawnLevel)
 let platform3 = new Platform("platform", "blue", 100, 30, xCenterCoord + 400, platformDefaultSpawnLevel )
@@ -77,9 +86,39 @@ let platform6 = new Platform("platform", "blue", 100, 30, xCenterCoord + 1000, p
 
 const platforms = [platform1, platform2, platform3, platform4, platform5, platform6]
 
+function restartGame(){
+    player.posX = spawnpointX
+    player.posY = spawnpointY - 100
+    player.gravity = gravity
+    player.gravitySpeed = 0
+    player.speedY = 0
+    player.numOfJumps = 0
+    player.score = 0
+    displayScore()
 
+    isGameOver = false
+    isOnGround = false
 
+    randomizePlatformPos()
+}
 
+function displayScore(){
+    scoreDiv.innerHTML = "Score: " + player.score
+}
+
+function displayhighscore(){
+    highscoreDiv.innerHTML = "Highscore " + highscore
+}
+
+function randomizePlatformPos(){
+    for (let i = 0; i < platforms.length; i++) {
+        let plat = platforms[i];
+    
+        plat.posX = spawnpointX + spawnpointXDiviation * i
+        plat.posY = generateNewPosY()
+        plat.speedX = platformVelocityX
+    }
+}
 
 function drawPlatforms(){
     for (let i = 0; i < platforms.length; i++) {
@@ -92,8 +131,8 @@ function drawPlatforms(){
 
 
     function drawPlayer(){
-        var image = new Image()
-        image.src = "Owl.png"
+        let image = new Image()
+        image.src = player.image
         var canvas = document.querySelector("canvas");
     
         var ctx = canvas.getContext("2d");
@@ -113,6 +152,11 @@ function gameOver(){
     player.speedY = 0
 
     isGameOver = true
+
+    if(player.score > highscore){
+        highscore = player.score
+        displayhighscore()
+    }
 
     for (let k = 0; k < platforms.length; k++) {
         const plat = platforms[k];
@@ -134,6 +178,7 @@ function collisionDetection() {
                 player.speedY = 0
                 player.posY = b.posY - player.height
                 player.numOfJumps = 0
+                player.image = "Owl.png"
             }
 
         }
@@ -151,21 +196,30 @@ function generateNewPos(plat){
     plat.posX = canvas.width + 100
     plat.posY = 200 + heightDiviation
 
-    player.numOfPoints += 1
-    score.innerHTML = "Score: " + player.numOfPoints
+    player.score += 1
+    displayScore()
 }
 
-function updatePos(entity){
-    entity.gravitySpeed += entity.gravity
-    entity.posY += entity.speedY + entity.gravitySpeed
+function generateNewPosY(){
+    let heightDiviation = 150 * Math.random()
+    let newPosY = 200 + heightDiviation
+
+    return newPosY
+}
+
+function updatePos(){
+    player.gravitySpeed += player.gravity
+    player.posY += player.speedY + player.gravitySpeed
 
 }
 
 function updatePlatformPos(){
-    for (let c = 0; c < platforms.length; c++) {
-        const plat = platforms[c];
-        plat.posX += plat.speedX
 
+
+    for (let c = 0; c < platforms.length; c++) {
+        let plat = platforms[c];
+        plat.posX += plat.speedX
+    
         if(plat.posX < endOfScreen){
             generateNewPos(plat)
         }
@@ -178,6 +232,7 @@ function jump(){
         player.gravitySpeed = 0
         player.speedY = player.jumpSpeed
         player.numOfJumps += 1
+        player.image = "flyingOwl.png"
     }
 }
 
@@ -194,16 +249,19 @@ document.onkeydown = function (e) {
 
 function update(){
     clearScreen()
-    updatePos(player)
+    updatePos()
     drawPlayer()
 
     drawPlatforms()
     updatePlatformPos()
-    collisionDetection(player)
+    collisionDetection()
 }
 
 function startGame(){
+    randomizePlatformPos()
     setInterval(update, 10)
 }
+ 
 
 startGame()
+
