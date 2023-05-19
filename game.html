@@ -1,25 +1,78 @@
 <html lang="en">
-<head>
-    <link rel="stylesheet" href="style.css">
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
-    <div id="flexbox_elements">
+  </head>
+  <body>
+    <!-- Menu -->
+    <div id="menu_elements">
+      <h1>Mega Bird</h1>
+      <br />
+      <br />
+      <div id="rules">
+        <br />
+        <h2>Rules</h2>
+        <br />
+        <p>
+          Welcome to Mega Bird! Master your space spamming skills in new and
+          exciting game! Survive as long as you can by jumping ti the next
+          platform, use the key W to jump. To start the game, choose a character
+          and press start game!
+        </p>
+      </div>
+      <div>
+        <button onclick="startGame()">Play Game</button>
+      </div>
+      <div id="choosecharacter">
+        <img
+          class="character"
+          id="goose"
+          alt="Gås"
+          src="goose.png"
+          onclick="chooseCharacter(goose)"
+        />
+        <img
+          class="character"
+          id="owl"
+          alt="Owl"
+          src="owl.png"
+          onclick="chooseCharacter(owl)"
+        />
+        <img
+          class="character"
+          id="eagle"
+          alt="Eagle"
+          src="eagle.png"
+          onclick="chooseCharacter(eagle)"
+        />
+        <img
+          class="character"
+          id="swan"
+          alt="Swan"
+          src="swan.png"
+          onclick="chooseCharacter(swan)"
+        />
+      </div>
+    </div>
+
+    <!-- Game -->
+    <div id="game_elements">
+      <div id="flexbox_elements">
         <div id="restart_game">
-            <button onclick="restartGame()">Start Game</button>
+          <button onclick="restartGame()">Restart Game</button>
         </div>
 
         <p id="score">Score: 0</p>
         <p id="highscore">Highscore: 0</p>
-
-    </div>
-    <div id="game">
+      </div>
+      <div id="game">
         <canvas id="canvas"></canvas>
+      </div>
     </div>
 
-</body>
-<script src="game.js"></script>
+    <script src="game.js"></script>
+  </body>
 </html>
