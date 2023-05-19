@@ -11,7 +11,7 @@ class Player {
     this.speedY = 0;
     this.numOfJumps = numOfJumps;
     this.jumpsAllowed = jumpsAllowed;
-    this.score = 0;
+    this.score = -1;
     this.image = image;
   }
 }
@@ -159,7 +159,7 @@ function restartGame() {
   player.gravitySpeed = 0;
   player.speedY = 0;
   player.numOfJumps = 0;
-  player.score = 0;
+  player.score = -1;
   displayScore();
 
   isGameOver = false;
